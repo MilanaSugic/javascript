@@ -2659,10 +2659,6 @@ In my opinion, the visible difference is way bigger, and it forces you to separa
 **[⬆ back to top](#table-of-contents)**
 
 
-**TO BE REVIEWED:**
-----------
-
-
 ## Type Casting & Coercion
 
   <a name="coercion--explicit"></a><a name="21.1"></a>
