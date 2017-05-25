@@ -81,7 +81,7 @@
   - [2.1](#references--prefer-const) Use `const` for all of your references; avoid using `var`. eslint: [`prefer-const`](http://eslint.org/docs/rules/prefer-const.html), [`no-const-assign`](http://eslint.org/docs/rules/no-const-assign.html)
 
     > Why? This ensures that you can't reassign your references, which can lead to bugs and difficult to comprehend code.
-    
+
     ```javascript
     // bad
     var a = 1;
@@ -109,26 +109,20 @@ Otherwise, if the reference is to a data model, and it's values can be changed, 
   <a name="references--disallow-var"></a><a name="2.2"></a>
  - [2.2](#references--disallow-var) If you must reassign references, use `let` instead of `var`. eslint: [`no-var`](http://eslint.org/docs/rules/no-var.html) jscs: [`disallowVar`](http://jscs.info/rule/disallowVar)
 
-    > Why? 
-
- - `let` is block-scoped rather than function-scoped like `var`. 
- - Which means we're not relying on the garbage collector, and instead we're explicitly releasing unnecessary variables, after we leave the block. We should always strive to clean up after ourselves, if possible.
- -  Also, we avoid polluting the global scope, by accidentally adding global variables (if the variable declaration is not in an IFFE)
-
-`let` is block-scoped rather than function-scoped like `var`.
-    
-    
+    > Why? `let` is block-scoped rather than function-scoped like `var`. Which means we're not relying on the garbage collector, and instead we're explicitly releasing unnecessary variables, after we leave the block. We should always strive to clean up after ourselves, if possible. Also, we avoid polluting the global scope, by accidentally adding global
 
 ```javascript
 // bad
-if (true) { 	  var count = 1;
+if (true) { 	  
+  var count = 1;
   count += 1;
 }
 // unreliable behavior:
 // count === 2 here, if we entered the if block, 	// or count is undefined, if we didn't.
 
 // good, use the let.
-if (true) { 	  let count = 1;
+if (true) {
+  let count = 1;
   count += 1;
 }
 // count is undefined here, since we left the IF block.
@@ -173,9 +167,10 @@ if (true) { 	  let count = 1;
 
 Otherwise, please use the constructor explicitly.
 
-    // eg:
-    let a = new Date();
-    ```
+  ```javascript
+   // eg:
+      let a = new Date();
+  ```
 
 
 ----------
@@ -212,6 +207,7 @@ Otherwise, please use the constructor explicitly.
 
 **3.2 Addendum:** Property names should **always** be descriptive:
 
+   ```javascript
     // bad:
     var a = {
 	    x: 'Charlie',
@@ -225,8 +221,8 @@ Otherwise, please use the constructor explicitly.
 	    lastName: 'Chaplin',
 	    address: '33 Maple Street'
     };
-    ```
-
+  ```
+   
 
 ----------
 
@@ -305,63 +301,63 @@ Otherwise, please use the constructor explicitly.
   <a name="objects--quoted-props"></a><a name="3.8"></a>
   - [3.6](#objects--quoted-props) Only quote properties that are invalid identifiers. eslint: [`quote-props`](http://eslint.org/docs/rules/quote-props.html) jscs: [`disallowQuotedKeysInObjects`](http://jscs.info/rule/disallowQuotedKeysInObjects)
 
-  > Why? In general we consider it subjectively easier to read. It improves syntax highlighting, and is also more easily optimized by many JS engines.
+    > Why? In general we consider it subjectively easier to read. It improves syntax highlighting, and is also more easily optimized by many JS engines.
 
-  ```javascript
-  // bad
-  const bad = {
-    'foo': 3,
-    'bar': 4,
-    'data-blah': 5,
-  };
+    ```javascript
+    // bad
+    const bad = {
+      'foo': 3,
+      'bar': 4,
+      'data-blah': 5,
+    };
 
-  // good
-  const good = {
-    foo: 3,
-    bar: 4,
-    'data-blah': 5,
-  };
-  ```
+    // good
+    const good = {
+      foo: 3,
+      bar: 4,
+      'data-blah': 5,
+    };
+    ```
 
   <a name="objects--prototype-builtins"></a>
   - [3.7](#objects--prototype-builtins) Do not call `Object.prototype` methods directly, such as `hasOwnProperty`, `propertyIsEnumerable`, and `isPrototypeOf`.
 
-  > Why? These methods may be shadowed by properties on the object in question - consider `{ hasOwnProperty: false }` - or, the object may be a null object (`Object.create(null)`).
+    > Why? These methods may be shadowed by properties on the object in question - consider `{ hasOwnProperty: false }` - or, the object may be a null object (`Object.create(null)`).
 
-  ```javascript
-  // bad
-  console.log(object.hasOwnProperty(key));
+    ```javascript
+    // bad
+    console.log(object.hasOwnProperty(key));
 
-  // good
-  console.log(Object.prototype.hasOwnProperty.call(object, key));
+    // good
+    console.log(Object.prototype.hasOwnProperty.call(object, key));
 
-  // best
-  const has = Object.prototype.hasOwnProperty; // cache the lookup once, in module scope.
-  /* or */
-  import has from 'has';
-  …
-  console.log(has.call(object, key));
-  ```
+    // best
+    const has = Object.prototype.hasOwnProperty; // cache the lookup once, in module scope.
+    /* or */
+    import has from 'has';
+    // ...
+    console.log(has.call(object, key));
+    ```
 
   <a name="objects--rest-spread"></a>
   - [3.8](#objects--rest-spread) Prefer the object spread operator over [`Object.assign`](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/assign) to shallow-copy objects. Use the object rest operator to get a new object with certain properties omitted.
 
-  ```javascript
-  // very bad
-  const original = { a: 1, b: 2 };
-  const copy = Object.assign(original, { c: 3 }); // this mutates `original` ಠ_ಠ
-  delete copy.a; // so does this
+    ```javascript
+    // very bad
+    const original = { a: 1, b: 2 };
+    const copy = Object.assign(original, { c: 3 }); // this mutates `original` ಠ_ಠ
+    delete copy.a; // so does this
 
-  // bad
-  const original = { a: 1, b: 2 };
-  const copy = Object.assign({}, original, { c: 3 }); // copy => { a: 1, b: 2, c: 3 }
+    // bad
+    const original = { a: 1, b: 2 };
+    const copy = Object.assign({}, original, { c: 3 }); // copy => { a: 1, b: 2, c: 3 }
 
-  // good
-  const original = { a: 1, b: 2 };
-  const copy = { ...original, c: 3 }; // copy => { a: 1, b: 2, c: 3 }
+    // good
+    const original = { a: 1, b: 2 };
+    const copy = { ...original, c: 3 }; // copy => { a: 1, b: 2, c: 3 }
 
-  const { a, ...noA } = copy; // noA => { b: 2, c: 3 }
-  ```
+    const { a, ...noA } = copy; // noA => { b: 2, c: 3 }
+    ```
 
 **[⬆ back to top](#table-of-contents)**
 
@@ -401,7 +397,7 @@ Otherwise, please use the constructor explicitly.
     const itemsCopy = [];
     let i;
 
-    for (i = 0; i < len; i++) {
+    for (i = 0; i < len; i += 1) {
       itemsCopy[i] = items[i];
     }
 
@@ -471,6 +467,45 @@ Otherwise, please use the constructor explicitly.
       return false;
     });
     ```
+
+**[⬆ back to top](#table-of-contents)**
+
+<a name="arrays--bracket-newline"></a>
+  - [4.6](#arrays--bracket-newline) Use line breaks after open and before close array brackets if an array has multiple lines
+
+  ```javascript
+  // bad
+  const arr = [
+    [0, 1], [2, 3], [4, 5],
+  ];
+
+  const objectInArray = [{
+    id: 1,
+  }, {
+    id: 2,
+  }];
+
+  const numberInArray = [
+    1, 2,
+  ];
+
+  // good
+  const arr = [[0, 1], [2, 3], [4, 5]];
+
+  const objectInArray = [
+    {
+      id: 1,
+    },
+    {
+      id: 2,
+    },
+  ];
+
+  const numberInArray = [
+    1,
+    2,
+  ];
+  ```
 
 **[⬆ back to top](#table-of-contents)**
 
@@ -625,7 +660,7 @@ Otherwise, please use the constructor explicitly.
 
     // good
     const foo = '\'this\' is "quoted"';
-    const foo = `my name is '${name}'`;		
+    const foo = `my name is '${name}'`;
     ```
 
 **[⬆ back to top](#table-of-contents)**
@@ -634,35 +669,33 @@ Otherwise, please use the constructor explicitly.
 ## Functions
 
   <a name="functions--declarations"></a><a name="7.1"></a>
-  - [7.1](#functions--declarations) ~~Use named function expressions instead of function declarations. eslint: [`func-style`](http://eslint.org/docs/rules/func-style) jscs: [`requireFunctionDeclarations`](http://jscs.info/rule/requireFunctionDeclarations)~~
+  - [7.1](#functions--declarations) ~~Use named function expressions instead of function declarations.~~ eslint: [`func-style`](http://eslint.org/docs/rules/func-style) jscs: [`requireFunctionDeclarations`](http://jscs.info/rule/requireFunctionDeclarations)
 
 We support the top-down approach. The user should be able to identify what functions are in which file/module, at first glance,  without looking through hundreds of lines of code.
 The functions will be hoisted. There is no need to worry about this, and it improves readability, in our opinion.
 
+  ```javascript
+  // bad
+  const foo = function bar() {
+  };
   
-
-```javascript
-// bad
-const foo = function bar() {
-};
-
-// bad
-const foo = function () {
-};
-
-// good
-function foo() {
-}
-
-// good
-module.exports {
-    foo,
-    bar
-}
-
-function foo() {}
-function bar() {}
-```
+  // bad
+  const foo = function () {
+  };
+  
+  // good
+  function foo() {
+  }
+  
+  // good
+  module.exports {
+      foo,
+      bar
+  }
+  
+  function foo() {}
+  function bar() {}
+  ```
 
   <a name="functions--iife"></a><a name="7.2"></a>
   - [7.2](#functions--iife) Wrap immediately invoked function expressions in parentheses. eslint: [`wrap-iife`](http://eslint.org/docs/rules/wrap-iife.html) jscs: [`requireParenthesesAroundIIFE`](http://jscs.info/rule/requireParenthesesAroundIIFE)
@@ -829,12 +862,12 @@ function bar() {}
     // bad
     function f1(obj) {
       obj.key = 1;
-    };
+    }
 
     // good
     function f2(obj) {
       const key = Object.prototype.hasOwnProperty.call(obj, 'key') ? obj.key : 1;
-    };
+    }
     ```
 
   <a name="functions--reassign-params"></a><a name="7.13"></a>
@@ -846,18 +879,22 @@ function bar() {}
     // bad
     function f1(a) {
       a = 1;
+      // ...
     }
 
     function f2(a) {
       if (!a) { a = 1; }
+      // ...
     }
 
     // good
     function f3(a) {
       const b = a || 1;
+      // ...
     }
 
     function f4(a = 1) {
+      // ...
     }
     ```
 
@@ -876,10 +913,10 @@ function bar() {}
     console.log(...x);
 
     // bad
-    new (Function.prototype.bind.apply(Date, [null, 2016, 08, 05]));
+    new (Function.prototype.bind.apply(Date, [null, 2016, 8, 5]));
 
     // good
-    new Date(...[2016, 08, 05]);
+    new Date(...[2016, 8, 5]);
     ```
 
   <a name="functions--signature-invocation-indentation"></a>
@@ -910,12 +947,11 @@ function bar() {}
     
     // good
     function foo(bar,
-				 baz,
+                 baz,
                  quux) {
       // body
     }
     ```
-
 
 **[⬆ back to top](#table-of-contents)**
 
@@ -978,7 +1014,7 @@ function bar() {}
 
     > Why? It shows clearly where the function starts and ends.
 
-    ```js
+    ```javascript
     // bad
     ['get', 'post', 'put'].map(httpMethod => Object.prototype.hasOwnProperty.call(
         httpMagicObjectWithAVeryLongName,
@@ -996,11 +1032,11 @@ function bar() {}
     ```
 
   <a name="arrows--one-arg-parens"></a><a name="8.4"></a>
-  - [8.4](#arrows--one-arg-parens) If your function takes a single argument and doesn’t use braces, omit the parentheses. Otherwise, always include parentheses around arguments. eslint: [`arrow-parens`](http://eslint.org/docs/rules/arrow-parens.html) jscs:  [`disallowParenthesesAroundArrowParam`](http://jscs.info/rule/disallowParenthesesAroundArrowParam)
+  - [8.4](#arrows--one-arg-parens) If your function takes a single argument and doesn’t use braces, omit the parentheses. Otherwise, always include parentheses around arguments for clarity and consistency. Note: it is also acceptable to always use parentheses, in which case use the ["always" option](http://eslint.org/docs/rules/arrow-parens#always) for eslint or do not include [`disallowParenthesesAroundArrowParam`](http://jscs.info/rule/disallowParenthesesAroundArrowParam) for jscs. eslint: [`arrow-parens`](http://eslint.org/docs/rules/arrow-parens.html) jscs:  [`disallowParenthesesAroundArrowParam`](http://jscs.info/rule/disallowParenthesesAroundArrowParam)
 
     > Why? Less visual clutter.
 
-    ```js
+    ```javascript
     // bad
     [1, 2, 3].map((x) => x * x);
 
@@ -1028,7 +1064,7 @@ function bar() {}
   <a name="arrows--confusing"></a><a name="8.5"></a>
   - [8.5](#arrows--confusing) Avoid confusing arrow function syntax (`=>`) with comparison operators (`<=`, `>=`). eslint: [`no-confusing-arrow`](http://eslint.org/docs/rules/no-confusing-arrow)
 
-    ```js
+    ```javascript
     // bad
     const itemHeight = item => item.height > 256 ? item.largeSize : item.smallSize;
 
@@ -1093,13 +1129,13 @@ function bar() {}
     }
     inherits(PeekableQueue, Queue);
     PeekableQueue.prototype.peek = function () {
-      return this._queue[0];
-    }
+      return this.queue[0];
+    };
 
     // good
     class PeekableQueue extends Queue {
       peek() {
-        return this._queue[0];
+        return this.queue[0];
       }
     }
     ```
@@ -1279,13 +1315,12 @@ function bar() {}
     import { named1, named2 } from 'foo';
 
     // good
-    import foo, 
-		   { named1, 
-			 named2 } from 'foo';
+    import foo, { named1, named2 } from 'foo';
 
     // good
-    import foo, { named1,
-			      named2
+    import foo, {
+      named1,
+      named2
     } from 'foo';
     ```
 
@@ -1297,11 +1332,11 @@ function bar() {}
     ```javascript
     // bad
     let foo = 3;
-    export { foo }
+    export { foo };
 
     // good
     const foo = 3;
-    export { foo }
+    export { foo };
     ```
 
 ----------
@@ -1356,11 +1391,12 @@ function bar() {}
     import {longNameA, longNameB, longNameC, longNameD, longNameE} from 'path';
 
     // good
-    import {  longNameA,
-		      longNameB,
-		      longNameC,
-		      longNameD,
-		      longNameE
+    import {
+      longNameA,
+      longNameB,
+      longNameC,
+      longNameD,
+      longNameE
     } from 'path';
     ```
 
@@ -1399,7 +1435,6 @@ function bar() {}
     for (let num of numbers) {
       sum += num;
     }
-
     sum === 15;
 
     // good
@@ -1410,6 +1445,19 @@ function bar() {}
     // best (use the functional force)
     const sum = numbers.reduce((total, num) => total + num, 0);
     sum === 15;
+
+    // bad
+    const increasedByOne = [];
+    for (let i = 0; i < numbers.length; i++) {
+      increasedByOne.push(numbers[i] + 1);
+    }
+
+    // good
+    const increasedByOne = [];
+    numbers.forEach(num => increasedByOne.push(num + 1));
+
+    // best (keeping it functional)
+    const increasedByOne = numbers.map(num => num + 1);
     ```
 
   <a name="generators--nope"></a><a name="11.2"></a>
@@ -1422,43 +1470,60 @@ function bar() {}
 
     > Why? `function` and `*` are part of the same conceptual keyword - `*` is not a modifier for `function`, `function*` is a unique construct, different from `function`.
 
-    ```js
+    ```javascript
     // bad
     function * foo() {
+      // ...
     }
 
+    // bad
     const bar = function * () {
-    }
+      // ...
+    };
 
+    // bad
     const baz = function *() {
-    }
+      // ...
+    };
 
+    // bad
     const quux = function*() {
-    }
+      // ...
+    };
 
+    // bad
     function*foo() {
+      // ...
     }
 
+    // bad
     function *foo() {
+      // ...
     }
 
     // very bad
     function
     *
     foo() {
+      // ...
     }
 
+    // very bad
     const wat = function
     *
     () {
-    }
+      // ...
+    };
 
     // good
     function* foo() {
+      // ...
     }
 
+    // good
     const foo = function* () {
-    }
+      // ...
+    };
     ```
 
 **[⬆ back to top](#table-of-contents)**
@@ -1504,7 +1569,7 @@ function bar() {}
 ## Variables
 
   <a name="variables--const"></a><a name="13.1"></a>
-  - [13.1](#variables--const) Always use `const`, or `let` to declare variables. Not doing so will result in global variables. We want to avoid polluting the global namespace. Captain Planet warned us of that. eslint: [`no-undef`](http://eslint.org/docs/rules/no-undef) [`prefer-const`](http://eslint.org/docs/rules/prefer-const)
+  - [13.1](#variables--const) Always use `const` or `let` to declare variables. Not doing so will result in global variables. We want to avoid polluting the global namespace. Captain Planet warned us of that. eslint: [`no-undef`](http://eslint.org/docs/rules/no-undef) [`prefer-const`](http://eslint.org/docs/rules/prefer-const)
 
     ```javascript
     // bad
@@ -1512,13 +1577,10 @@ function bar() {}
 
     // good
     const superPower = new SuperPower();
-    
-    // good
-    let superPower = new SuperPower();
     ```
 
   <a name="variables--one-const"></a><a name="13.2"></a>
-  - [13.2](#variables--one-const) Use one `const` declaration per variable. eslint: [`one-var`](http://eslint.org/docs/rules/one-var.html) jscs: [`disallowMultipleVarDecl`](http://jscs.info/rule/disallowMultipleVarDecl)
+  - [13.2](#variables--one-const) Use one `const` or `let` declaration per variable. eslint: [`one-var`](http://eslint.org/docs/rules/one-var.html) jscs: [`disallowMultipleVarDecl`](http://jscs.info/rule/disallowMultipleVarDecl)
 
     > Why? It's easier to add new variable declarations this way, and you never have to worry about swapping out a `;` for a `,` or introducing punctuation-only diffs. You can also step through each declaration with the debugger, instead of jumping through all of them at once.
     
@@ -1531,24 +1593,23 @@ function bar() {}
 	goSportsTeam = true,
 	dragonball = 'z';
 
-	// bad
-	// (compare to above, and try to spot the mistake)
-	const items = getItems(),
-	goSportsTeam = true;
-	dragonball = 'z';
+    ```javascript
+    // bad
+    const items = getItems(),
+        goSportsTeam = true,
+        dragonball = 'z';
 
-	// bad
-	const items = getItems(), 
-	  d = new Date(), 
-	  goSportsTeam = items.length + d.getTime(), 
-	  dragonball = items[items.length - 1] + goSportsTeam;
+    // bad
+    // (compare to above, and try to spot the mistake)
+    const items = getItems(),
+        goSportsTeam = true;
+        dragonball = 'z';
 
-	// good
-	const items = getItems();
-	const goSportsTeam = true;
-	const dragonball = 'z';
-	```
-
+    // good
+    const items = getItems();
+    const goSportsTeam = true;
+    const dragonball = 'z';
+    ```
 
   <a name="variables--const-let-group"></a><a name="13.3"></a>
   - [13.3](#variables--const-let-group) Group all your `const`s and then group all your `let`s.
@@ -1575,8 +1636,7 @@ function bar() {}
     let i;
     let length;
     ```
-   
- 
+
   <a name="variables--define-where-used"></a><a name="13.4"></a>
   - [13.4](#variables--define-where-used) Assign variables where you need them, but place them in a reasonable place.
 
@@ -1615,8 +1675,6 @@ function bar() {}
       return name;
     }
     ```
-
-
   <a name="variables--no-chain-assignment"></a><a name="13.5"></a>
   - [13.5](#variables--no-chain-assignment) Don't chain variable assignments.
 
@@ -1656,32 +1714,32 @@ function bar() {}
     > Why? Per the eslint documentation, unary increment and decrement statements are subject to automatic semicolon insertion and can cause silent errors with incrementing or decrementing values within an application. It is also more expressive to mutate your values with statements like `num += 1` instead of `num++` or `num ++`. Disallowing unary increment and decrement statements also prevents you from pre-incrementing/pre-decrementing values unintentionally which can also cause unexpected behavior in your programs.
 
     ```javascript
-      // bad
+    // bad
 
-      let array = [1, 2, 3];
-      let num = 1;
-      num++;
-      --num;
+    const array = [1, 2, 3];
+    let num = 1;
+    num++;
+    --num;
 
-      let sum = 0;
-      let truthyCount = 0;
-      for(let i = 0; i < array.length; i++){
-        let value = array[i];
-        sum += value;
-        if (value) {
-          truthyCount++;
-        }
+    let sum = 0;
+    let truthyCount = 0;
+    for (let i = 0; i < array.length; i++) {
+      let value = array[i];
+      sum += value;
+      if (value) {
+        truthyCount++;
       }
+    }
 
-      // good
+    // good
 
-      let array = [1, 2, 3];
-      let num = 1;
-      num += 1;
-      num -= 1;
+    const array = [1, 2, 3];
+    let num = 1;
+    num += 1;
+    num -= 1;
 
-      const sum = array.reduce((a, b) => a + b, 0);
-      const truthyCount = array.filter(Boolean).length;
+    const sum = array.reduce((a, b) => a + b, 0);
+    const truthyCount = array.filter(Boolean).length;
     ```
 
 **[⬆ back to top](#table-of-contents)**
@@ -1765,7 +1823,7 @@ function bar() {}
 
       var named = function named() {
         console.log('named');
-      }
+      };
     }
     ```
 
@@ -1815,32 +1873,32 @@ function bar() {}
     ```javascript
     // bad
     if (isValid === true) {
-      // ...stuff...
+      // ...
     }
 
     // good
     if (isValid) {
-      // ...stuff...
+      // ...
     }
 
     // bad
     if (name) {
-      // ...stuff...
+      // ...
     }
 
     // good
     if (name !== '') {
-      // ...stuff...
+      // ...
     }
 
     // bad
     if (collection.length) {
-      // ...stuff...
+      // ...
     }
 
     // good
     if (collection.length > 0) {
-      // ...stuff...
+      // ...
     }
     ```
 
@@ -1850,9 +1908,9 @@ function bar() {}
   <a name="comparison--switch-blocks"></a><a name="15.5"></a>
   - [15.5](#comparison--switch-blocks) Use braces to create blocks in `case` and `default` clauses that contain lexical declarations (e.g. `let`, `const`, `function`, and `class`).
 
-  > Why? Lexical declarations are visible in the entire `switch` block but only get initialized when assigned, which only happens when its `case` is reached. This causes problems when multiple `case` clauses attempt to define the same thing.
+    > Why? Lexical declarations are visible in the entire `switch` block but only get initialized when assigned, which only happens when its `case` is reached. This causes problems when multiple `case` clauses attempt to define the same thing.
 
-  eslint rules: [`no-case-declarations`](http://eslint.org/docs/rules/no-case-declarations.html).
+    eslint rules: [`no-case-declarations`](http://eslint.org/docs/rules/no-case-declarations.html).
 
     ```javascript
     // bad
@@ -1864,7 +1922,9 @@ function bar() {}
         const y = 2;
         break;
       case 3:
-        function f() {}
+        function f() {
+          // ...
+        }
         break;
       default:
         class C {}
@@ -1881,7 +1941,9 @@ function bar() {}
         break;
       }
       case 3: {
-        function f() {}
+        function f() {
+          // ...
+        }
         break;
       }
       case 4:
@@ -1894,7 +1956,9 @@ function bar() {}
     ```
 
   <a name="comparison--nested-ternaries"></a><a name="15.6"></a>
-  - [15.6](#comparison--nested-ternaries) Ternaries should not be nested and generally be single line expressions. eslint rules: [`no-nested-ternary`](http://eslint.org/docs/rules/no-nested-ternary.html).
+  - [15.6](#comparison--nested-ternaries) Ternaries should not be nested and generally be single line expressions.
+
+    eslint rules: [`no-nested-ternary`](http://eslint.org/docs/rules/no-nested-ternary.html).
 
     ```javascript
     // bad
@@ -1916,7 +1980,9 @@ function bar() {}
     ```
 
   <a name="comparison--unneeded-ternary"></a><a name="15.7"></a>
-  - [15.7](#comparison--unneeded-ternary) Avoid unneeded ternary statements. eslint rules: [`no-unneeded-ternary`](http://eslint.org/docs/rules/no-unneeded-ternary.html).
+  - [15.7](#comparison--unneeded-ternary) Avoid unneeded ternary statements.
+
+    eslint rules: [`no-unneeded-ternary`](http://eslint.org/docs/rules/no-unneeded-ternary.html).
 
     ```javascript
     // bad
@@ -1942,6 +2008,9 @@ function bar() {}
     // bad
     if (test)
       return false;
+
+    // good
+    if (test) return false;
 
     // good
     if (test) {
@@ -1997,7 +2066,7 @@ function bar() {}
     // @return {Element} element
     function make(tag) {
 
-      // ...stuff...
+      // ...
 
       return element;
     }
@@ -2009,7 +2078,7 @@ function bar() {}
      */
     function make(tag) {
 
-      // ...stuff...
+      // ...
 
       return element;
     }
@@ -2030,7 +2099,7 @@ function bar() {}
     function getType() {
       console.log('fetching type...');
       // set the default type to 'no type'
-      const type = this._type || 'no type';
+      const type = this.type || 'no type';
 
       return type;
     }
@@ -2040,7 +2109,7 @@ function bar() {}
       console.log('fetching type...');
 
       // set the default type to 'no type'
-      const type = this._type || 'no type';
+      const type = this.type || 'no type';
 
       return type;
     }
@@ -2048,7 +2117,7 @@ function bar() {}
     // also good
     function getType() {
       // set the default type to 'no type'
-      const type = this._type || 'no type';
+      const type = this.type || 'no type';
 
       return type;
     }
@@ -2072,7 +2141,7 @@ function bar() {}
      */
     function make(tag) {
 
-      // ...stuff...
+      // ...
 
       return element;
     }
@@ -2084,7 +2153,7 @@ function bar() {}
      */
     function make(tag) {
 
-      // ...stuff...
+      // ...
 
       return element;
     }
@@ -2127,26 +2196,24 @@ function bar() {}
 ## Whitespace
 
   <a name="whitespace--spaces"></a><a name="18.1"></a>
-  - [18.1](#whitespace--spaces) Use soft tabs set to 4 spaces. eslint: [`indent`](http://eslint.org/docs/rules/indent.html) jscs: [`validateIndentation`](http://jscs.info/rule/validateIndentation)
+  - [18.1](#whitespace--spaces) Use soft tabs (space character) set to 4 spaces. eslint: [`indent`](http://eslint.org/docs/rules/indent.html) jscs: [`validateIndentation`](http://jscs.info/rule/validateIndentation)
 
     ```javascript
     // bad
     function foo() {
-    ∙∙const name;
+    ∙∙let name;
     }
 
     // bad
     function bar() {
-    ∙const name;
+    ∙let name;
     }
 
     // good
     function baz() {
-    ∙∙∙∙const name;
+    ∙∙let name;
     }
     ```
-    
-
 
   <a name="whitespace--before-blocks"></a><a name="18.2"></a>
   - [18.2](#whitespace--before-blocks) Place 1 space before the leading brace. eslint: [`space-before-blocks`](http://eslint.org/docs/rules/space-before-blocks.html) jscs: [`requireSpaceBeforeBlockStatements`](http://jscs.info/rule/requireSpaceBeforeBlockStatements)
@@ -2263,7 +2330,7 @@ function bar() {}
     // bad
     const leds = stage.selectAll('.led').data(data).enter().append('svg:svg').classed('led', true)
         .attr('width', (radius + margin) * 2).append('svg:g')
-        .attr('transform', 'translate(' + (radius + margin) + ',' + (radius + margin) + ')')
+        .attr('transform', `translate(${radius + margin},${radius + margin})`)
         .call(tron.led);
 
     // good
@@ -2273,7 +2340,7 @@ function bar() {}
         .classed('led', true)
         .attr('width', (radius + margin) * 2)
       .append('svg:g')
-        .attr('transform', 'translate(' + (radius + margin) + ',' + (radius + margin) + ')')
+        .attr('transform', `translate(${radius + margin},${radius + margin})`)
         .call(tron.led);
 
     // good
@@ -2569,6 +2636,13 @@ function bar() {}
     createHero(
       firstName,
       lastName,
+      inventorOf
+    );
+
+    // good
+    createHero(
+      firstName,
+      lastName,
       inventorOf,
     );
 
@@ -2601,10 +2675,10 @@ function bar() {}
     }());
 
     // good, but legacy (guards against the function becoming an argument when two files with IIFEs are concatenated)
-    ;(() => {
+    ;((() => {
       const name = 'Skywalker';
       return name;
-    }());
+    })());
     ```
 
     [Read more](https://stackoverflow.com/questions/7365172/semicolon-before-self-invoking-function/7365214%237365214).
@@ -2675,9 +2749,9 @@ function bar() {}
   - [21.5](#coercion--bitwise) **Note:** Be careful when using bitshift operations. Numbers are represented as [64-bit values](https://es5.github.io/#x4.3.19), but bitshift operations always return a 32-bit integer ([source](https://es5.github.io/#x11.7)). Bitshift can lead to unexpected behavior for integer values larger than 32 bits. [Discussion](https://github.com/airbnb/javascript/issues/109). Largest signed 32-bit Int is 2,147,483,647:
 
     ```javascript
-    2147483647 >> 0 //=> 2147483647
-    2147483648 >> 0 //=> -2147483648
-    2147483649 >> 0 //=> -2147483647
+    2147483647 >> 0; // => 2147483647
+    2147483648 >> 0; // => -2147483648
+    2147483649 >> 0; // => -2147483647
     ```
 
   <a name="coercion--booleans"></a><a name="21.6"></a>
@@ -2707,12 +2781,12 @@ function bar() {}
     ```javascript
     // bad
     function q() {
-      // ...stuff...
+      // ...
     }
 
     // good
     function query() {
-      // ..stuff..
+      // ...
     }
     ```
 
@@ -2839,6 +2913,7 @@ function bar() {}
 
     ```javascript
     function makeStyleGuide() {
+      // ...
     }
 
     export default makeStyleGuide;
@@ -2969,7 +3044,7 @@ function bar() {}
     // bad
     $(this).trigger('listingUpdated', listing.id);
 
-    ...
+    // ...
 
     $(this).on('listingUpdated', (e, listingId) => {
       // do something with listingId
@@ -2982,7 +3057,7 @@ function bar() {}
     // good
     $(this).trigger('listingUpdated', { listingId: listing.id });
 
-    ...
+    // ...
 
     $(this).on('listingUpdated', (e, data) => {
       // do something with data.listingId
@@ -3016,7 +3091,7 @@ function bar() {}
     function setSidebar() {
       $('.sidebar').hide();
 
-      // ...stuff...
+      // ...
 
       $('.sidebar').css({
         'background-color': 'pink'
@@ -3028,7 +3103,7 @@ function bar() {}
       const $sidebar = $('.sidebar');
       $sidebar.hide();
 
-      // ...stuff...
+      // ...
 
       $sidebar.css({
         'background-color': 'pink'
@@ -3152,7 +3227,8 @@ function bar() {}
   - Code Style Linters
     + [ESlint](http://eslint.org/) - [Airbnb Style .eslintrc](https://github.com/airbnb/javascript/blob/master/linters/.eslintrc)
     + [JSHint](http://jshint.com/) - [Airbnb Style .jshintrc](https://github.com/airbnb/javascript/blob/master/linters/.jshintrc)
-    + [JSCS](https://github.com/jscs-dev/node-jscs) - [Airbnb Style Preset](https://github.com/jscs-dev/node-jscs/blob/master/presets/airbnb.json)
+    + [JSCS](https://github.com/jscs-dev/node-jscs) - [Airbnb Style Preset](https://github.com/jscs-dev/node-jscs/blob/master/presets/airbnb.json) (Deprecated, please use [ESlint](https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb-base))
+  - Neutrino preset - [neutrino-preset-airbnb-base](https://neutrino.js.org/presets/neutrino-preset-airbnb-base/)
 
 **Other Style Guides**
 
@@ -3212,3 +3288,5 @@ function bar() {}
   - [JavaScript Air](https://javascriptair.com/)
   - [JavaScript Jabber](https://devchat.tv/js-jabber/)
 
+
+**[⬆ back to top](#table-of-contents)**
